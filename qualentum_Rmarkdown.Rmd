@@ -1,0 +1,83 @@
+---
+title: "qualentum_Rmardowm"
+output: html_document
+date: "2025-03-29"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+---
+title: "Análisis Exploratorio del Conjunto de Datos mtcars"
+author: "Tu Nombre"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    toc: true
+    toc_depth: 2
+    theme: readable
+    number_sections: true
+---
+
+# Introducción
+
+En este documento se presenta un **análisis exploratorio** del conjunto de datos `mtcars`, incluido en R por defecto. El propósito principal es:
+
+- Visualizar el contenido del dataset.
+- **Explorar relaciones** entre variables numéricas.
+- Presentar los datos mediante tablas y gráficos de forma clara e interactiva.
+
+Los puntos clave de este análisis incluyen:
+
+1. Carga y descripción del dataset.
+2. Presentación de los datos con tablas.
+3. Visualización gráfica de relaciones entre variables.
+4. Generación de conclusiones sobre los patrones observados.
+
+# Análisis de datos
+
+## Carga del dataset
+
+```{r cargar-datos}
+# Cargar librerías necesarias
+library(knitr)
+library(DT)
+library(ggplot2)
+data("mtcars")
+```
+
+## Tabla estática con kable
+
+```{r tabla-kable}
+kable(head(mtcars), caption = "Primeras filas del dataset mtcars")
+```
+
+## Tabla interactiva con DT
+
+```{r tabla-dt}
+datatable(mtcars, options = list(pageLength = 5), caption = "Tabla interactiva del dataset mtcars")
+```
+
+## Gráfico: Relación entre Peso y Consumo
+
+```{r grafico}
+ggplot(mtcars, aes(x = wt, y = mpg)) +
+  geom_point(color = "steelblue", size = 3) +
+  geom_smooth(method = "lm", se = FALSE, color = "darkred") +
+  labs(title = "Relación entre el peso del vehículo (wt) y el consumo (mpg)",
+       x = "Peso (wt)",
+       y = "Millas por galón (mpg)") +
+  theme_minimal()
+```
+
+# Conclusiones
+
+- Se observó una **relación inversa** entre el peso del vehículo y el rendimiento de combustible.
+- Las herramientas de visualización como `kable`, `DT` y `ggplot2` permiten una exploración clara y efectiva de los datos.
+- El dataset `mtcars` ofrece una base sólida para aprender y practicar análisis de datos en R.
+
+---
+
+> *Este documento fue creado como parte de un ejercicio de evaluación para la asignatura de análisis de datos con R.*
+
