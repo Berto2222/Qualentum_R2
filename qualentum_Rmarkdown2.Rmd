@@ -1,0 +1,84 @@
+---
+title: "qualentum_Rmardowm"
+output: html_document
+date: "2025-03-29"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Cargar las librerías necesarias
+library(dplyr)
+library(tidyr)
+
+# Cargar los datos mtcars
+data(mtcars)
+df <- as.data.frame(mtcars)
+
+# 2. Selección de columnas y filtrado de filas
+df_filtrado <- df %>%
+  select(mpg, cyl, hp, gear) %>%
+  filter(cyl > 4)
+
+# Verificación de datos después de la selección y filtrado
+print("Datos después de la selección y filtrado:")
+print(df_filtrado)
+
+# 3. Ordenación y renombrado de columnas
+df_ordenado <- df_filtrado %>%
+  arrange(desc(hp)) %>%
+  rename(consumo = mpg, potencia = hp)
+
+# Verificación de datos después de la ordenación y renombrado
+print("Datos después de la ordenación y renombrado:")
+print(df_ordenado)
+
+# 4. Creación de nuevas columnas y agregación de datos
+df_eficiencia <- df_ordenado %>%
+  mutate(eficiencia = consumo / potencia) %>%
+  group_by(cyl) %>%
+  summarise(consumo_medio = mean(consumo), potencia_maxima = max(potencia))
+
+# Verificación de datos después de la creación de la nueva columna y agregación
+print("Datos después de la creación de la nueva columna y agregación:")
+print(df_eficiencia)
+
+# 5. Creación del segundo dataframe y unión de dataframes
+df_transmision <- data.frame(
+  gear = c(3, 4, 5),
+  tipo_transmision = c("Manual", "Automática", "Semiautomática")
+)
+
+# Realización del left_join
+df_final <- left_join(df_ordenado, df_transmision, by = "gear")
+
+# Verificación de datos después de la unión de dataframes
+print("Datos después de la unión de dataframes:")
+print(df_final)
+
+# 6. Transformación de formatos con pivot_longer y pivot_wider
+df_largo <- df_final %>%
+  pivot_longer(cols = c(consumo, potencia, eficiencia), 
+               names_to = "medida", values_to = "valor")
+
+# Verificación de datos después de la transformación a formato largo
+print("Datos después de la transformación a formato largo:")
+print(df_largo)
+
+# Identificación de combinaciones duplicadas antes de aplicar pivot_wider
+df_largo_duplicados <- df_largo %>%
+  group_by(cyl, gear, tipo_transmision, medida) %>%
+  summarise(valor_promedio = mean(valor), .groups = 'drop')
+
+# Verificación de datos con duplicados manejados
+print("Datos después de manejar duplicados en formato largo:")
+print(df_largo_duplicados)
+
+# Transformación de nuevo a formato ancho con pivot_wider
+df_ancho <- df_largo_duplicados %>%
+  pivot_wider(names_from = medida, values_from = valor_promedio)
+
+# Verificación de datos después de la transformación a formato ancho
+print("Datos después de la transformación a formato ancho:")
+print(df_ancho)
